@@ -7,7 +7,7 @@ const router = express.Router();
 const errorMessage = { message: 'Pessoa palestrante não encontrada' };
 
 // requirement 01
-router.get('/', async (req, res) => {
+router.get('/', async (_req, res) => {
   const allTalkers = await getTalkers.getAll();
   res.status(200).json(allTalkers);
 });
