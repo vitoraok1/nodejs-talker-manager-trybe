@@ -12,7 +12,6 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-// requirement 01
 app.use('/talker', talkerRoutes);
 
 app.listen(PORT, () => {
