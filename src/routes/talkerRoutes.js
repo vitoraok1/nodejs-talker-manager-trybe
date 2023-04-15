@@ -70,4 +70,16 @@ router.put('/:id', tokenValidate,
   return res.status(200).json(allTalkers[index]);
 });
 
+// requirement 07
+router.delete('/:id', tokenValidate, async (req, res) => {
+  const { id } = req.params;
+  const allTalkers = await getTalkers.getAll();
+
+  const filteredTalkers = allTalkers.filter((talker) => talker.id !== Number(id));
+  const updateTalkers = JSON.stringify(filteredTalkers, null, 2);
+  await fs.writeFile(talkersPath, updateTalkers);
+
+  res.status(204).json();
+});
+
 module.exports = router;
