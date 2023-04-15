@@ -48,4 +48,26 @@ router.post('/', tokenValidate,
   res.status(201).json({ ...addTalker });
 });
 
+// requirement 06
+router.put('/:id', tokenValidate, 
+  nameValidate, ageValidate, talkValidate, watchedAtValidate, rateValidate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const allTalkers = await getTalkers.getAll();
+
+  const index = allTalkers.findIndex((talker) => talker.id === Number(id));
+
+  // Como o método findIndex retorna -1 caso não ache o índice do primeiro array 
+  // que contenha o mesmo id passado por parâmetro, é feita a condicional nesse ponto para retornar o status de erro 404.
+  if (index === -1) {
+    return res.status(404).json(errorMessage);
+  }
+
+  allTalkers[index] = { ...allTalkers[index], name, age, talk: { watchedAt, rate } };
+  const updateTalkers = JSON.stringify(allTalkers, null, 2);
+  await fs.writeFile(talkersPath, updateTalkers);
+
+  return res.status(200).json(allTalkers[index]);
+});
+
 module.exports = router;
