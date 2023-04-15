@@ -19,6 +19,23 @@ router.get('/', async (_req, res) => {
   res.status(200).json(allTalkers);
 });
 
+// requirement 08
+router.get('/search', tokenValidate, async (req, res) => {
+  const { q } = req.query;
+  const allTalkers = await getTalkers.getAll();
+
+  if (q) {
+    const filteredTalker = allTalkers.filter((talker) => talker.name.toLowerCase().includes(q.toLowerCase()));
+    if (filteredTalker === []) {
+      return res.status(200).json([]);
+    }
+    return res.status(200).json(filteredTalker);
+  }
+
+  return res.status(200).json(allTalkers);
+
+});
+
 // requirement 02
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
@@ -79,7 +96,7 @@ router.delete('/:id', tokenValidate, async (req, res) => {
   const updateTalkers = JSON.stringify(filteredTalkers, null, 2);
   await fs.writeFile(talkersPath, updateTalkers);
 
-  res.status(204).json();
+  res.status(204).end();
 });
 
 module.exports = router;
