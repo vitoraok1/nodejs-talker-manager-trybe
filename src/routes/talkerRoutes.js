@@ -25,7 +25,8 @@ router.get('/search', tokenValidate, async (req, res) => {
   const allTalkers = await getTalkers.getAll();
 
   if (q) {
-    const filteredTalker = allTalkers.filter((talker) => talker.name.toLowerCase().includes(q.toLowerCase()));
+    const filteredTalker = allTalkers
+      .filter((talker) => talker.name.toLowerCase().includes(q.toLowerCase()));
     if (filteredTalker === []) {
       return res.status(200).json([]);
     }
@@ -33,7 +34,6 @@ router.get('/search', tokenValidate, async (req, res) => {
   }
 
   return res.status(200).json(allTalkers);
-
 });
 
 // requirement 02
