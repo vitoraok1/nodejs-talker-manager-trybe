@@ -14,7 +14,7 @@
     "id": 2,
     "talk": {
       "watchedAt": "22/10/2020",
-      "rate": 4
+      "rate": 5
     }
   },
   {
@@ -41,6 +41,15 @@
     "id": 5,
     "talk": {
       "watchedAt": "29/10/2020",
+      "rate": 5
+    }
+  },
+  {
+    "name": "Heloísa Albuquerque",
+    "age": 67,
+    "id": 2,
+    "talk": {
+      "watchedAt": "22/10/2020",
       "rate": 5
     }
   }

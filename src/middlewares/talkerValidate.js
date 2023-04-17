@@ -92,6 +92,24 @@ const rateValidate = (req, res, next) => {
   next();
 };
 
+const rateRouteValidate = (req, res, next) => {
+  const { rate } = req.body;
+  const min = 1;
+  const max = 5;
+
+  if (rate === undefined) {
+ return res.status(400)
+    .json({ message: 'O campo "rate" é obrigatório' }); 
+}
+  
+  if (!Number.isInteger(rate) || rate < min || rate > max) {
+ return res.status(400)
+    .json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' }); 
+}
+
+  next();
+};
+
 const rateQueryValidate = (req, res, next) => {
   const { rate } = req.query;
   const rateToNumber = Number(rate);
@@ -125,4 +143,5 @@ module.exports = {
   rateValidate,
   rateQueryValidate,
   dateQueryValidate,
+  rateRouteValidate,
 };

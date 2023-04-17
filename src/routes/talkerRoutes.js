@@ -9,7 +9,9 @@ const { tokenValidate,
   talkValidate, 
   watchedAtValidate, 
   rateValidate, 
-  rateQueryValidate, dateQueryValidate } = require('../middlewares/talkerValidate');
+  rateQueryValidate, 
+  dateQueryValidate,
+  rateRouteValidate } = require('../middlewares/talkerValidate');
 
 const router = express.Router();
 const talkersPath = path.resolve(__dirname, '../talker.json');
@@ -20,6 +22,20 @@ const errorMessage = { message: 'Pessoa palestrante não encontrada' };
 router.get('/', async (_req, res) => {
   const allTalkers = await getTalkers.getAll();
   res.status(200).json(allTalkers);
+});
+
+// requirement 11
+router.patch('/rate/:id', tokenValidate, rateRouteValidate, async (req, res) => {
+  const { rate } = req.body;
+  const { id } = req.params;
+  const allTalkers = await getTalkers.getAll();
+  const findTalker = allTalkers.find((talker) => talker.id === Number(id));
+
+  findTalker.talk.rate = rate;
+  const updateTalkers = JSON.stringify([...allTalkers, findTalker], null, 2);
+  await fs.writeFile(talkersPath, updateTalkers);
+
+  return res.status(204).end();
 });
 
 // requirement 08
