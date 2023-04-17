@@ -6,7 +6,10 @@ const getTalkers = require('../utils/getTalkers');
 const { tokenValidate, 
   nameValidate, 
   ageValidate, 
-  talkValidate, watchedAtValidate, rateValidate } = require('../middlewares/talkerValidate');
+  talkValidate, 
+  watchedAtValidate, 
+  rateValidate, 
+  rateQueryValidate, dateQueryValidate } = require('../middlewares/talkerValidate');
 
 const router = express.Router();
 const talkersPath = path.resolve(__dirname, '../talker.json');
@@ -20,20 +23,24 @@ router.get('/', async (_req, res) => {
 });
 
 // requirement 08
-router.get('/search', tokenValidate, async (req, res) => {
-  const { q } = req.query;
+router.get('/search', tokenValidate, rateQueryValidate, dateQueryValidate, async (req, res) => {
+  const { q, rate, date } = req.query;
   const allTalkers = await getTalkers.getAll();
+  let filteredTalker = allTalkers;
 
   if (q) {
-    const filteredTalker = allTalkers
+    filteredTalker = filteredTalker
       .filter((talker) => talker.name.toLowerCase().includes(q.toLowerCase()));
-    if (filteredTalker === []) {
-      return res.status(200).json([]);
-    }
-    return res.status(200).json(filteredTalker);
   }
-
-  return res.status(200).json(allTalkers);
+  if (rate) {
+    filteredTalker = filteredTalker
+      .filter((talker) => talker.talk.rate === Number(rate));
+  }
+  if (date) {
+    filteredTalker = filteredTalker
+      .filter((talker) => talker.talk.watchedAt === date);
+  }
+  return res.status(200).json(filteredTalker);
 });
 
 // requirement 02

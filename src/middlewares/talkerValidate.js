@@ -11,7 +11,7 @@ const tokenValidate = (req, res, next) => {
     .json({ message: 'Token inválido' }); 
 }
 
-  return next();
+  next();
 };
 
 const nameValidate = (req, res, next) => {
@@ -27,7 +27,7 @@ const nameValidate = (req, res, next) => {
     .json({ message: 'O "name" deve ter pelo menos 3 caracteres' }); 
 }
 
-  return next();
+  next();
 };
 
 const ageValidate = (req, res, next) => {
@@ -43,7 +43,7 @@ const ageValidate = (req, res, next) => {
     .json({ message: 'O campo "age" deve ser um número inteiro igual ou maior que 18' }); 
 }
 
-  return next();
+  next();
 };
 
 const talkValidate = (req, res, next) => {
@@ -54,7 +54,7 @@ const talkValidate = (req, res, next) => {
     .json({ message: 'O campo "talk" é obrigatório' }); 
 }
 
-  return next();
+  next();
 };
 
 const watchedAtValidate = (req, res, next) => {
@@ -71,7 +71,7 @@ const watchedAtValidate = (req, res, next) => {
     .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' }); 
 }
 
-  return next();
+  next();
 };
 
 const rateValidate = (req, res, next) => {
@@ -89,7 +89,31 @@ const rateValidate = (req, res, next) => {
     .json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' }); 
 }
 
-  return next();
+  next();
+};
+
+const rateQueryValidate = (req, res, next) => {
+  const { rate } = req.query;
+  const rateToNumber = Number(rate);
+
+  if (rate && (!Number.isInteger(rateToNumber) || rateToNumber < 1 || rateToNumber > 5)) {
+    return res.status(400)
+      .json({ message: 'O campo "rate" deve ser um número inteiro entre 1 e 5' });
+  }
+
+  next();
+};
+
+const dateQueryValidate = (req, res, next) => {
+  const { date } = req.query;
+  const regexDate = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
+
+  if (date && !regexDate.test(date)) {
+    return res.status(400)
+      .json({ message: 'O parâmetro "date" deve ter o formato "dd/mm/aaaa"' });
+  }
+
+  next();
 };
 
 module.exports = {
@@ -99,4 +123,6 @@ module.exports = {
   talkValidate,
   watchedAtValidate,
   rateValidate,
+  rateQueryValidate,
+  dateQueryValidate,
 };
